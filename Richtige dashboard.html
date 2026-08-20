@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)file:///C:/Users/heeba/pixel-ai-house/index.html -->
+<html lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIXEL AI HOUSE — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./Richtige dashboard_files/css2" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: #12161e;
+      --panel-2: #171c26;
+      --line: #2a3344;
+      --ink: #e8eef8;
+      --muted: #8b97ab;
+      --accent: #6eb6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: VT323, "Courier New", monospace;
+      overflow: hidden;
+    }
+
+    body { display: grid; place-items: center; }
+
+    #app {
+      width: 1280px;
+      height: 720px;
+      background: linear-gradient(180deg, #10141c 0%, #0b0d12 100%);
+      border: 2px solid #cfd6de;
+      box-shadow:
+        0 0 0 2px #0b0d12,
+        0 0 0 4px #8b949e,
+        0 0 0 6px #0b0d12,
+        0 22px 50px rgba(0, 0, 0, 0.55);
+      display: grid;
+      grid-template-rows: 48px 86px 1fr 176px;
+      overflow: hidden;
+    }
+
+    .pixel { font-family: "Press Start 2P", monospace; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: #07090c;
+      border-bottom: 2px solid #cfd6de;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand h1 {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.4px;
+    }
+
+    .live {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 8px; height: 8px;
+      background: #3dcf7a;
+      box-shadow: 0 0 8px #3dcf7a;
+      animation: pulse 1.4s infinite;
+    }
+    .dot.off { background: #f5c542; box-shadow: none; animation: none; }
+    @keyframes pulse { 50% { opacity: 0.35; } }
+
+    header button, .toolbar button {
+      font-family: "Press Start 2P", monospace;
+      font-size: 8px;
+      color: var(--ink);
+      background: #1a2130;
+      border: 2px solid #cfd6de;
+      padding: 7px 10px;
+      cursor: pointer;
+    }
+    header button:hover, .toolbar button:hover { background: #2a3548; }
+    header button.active { background: #6eb6ff; color: #0b0d12; }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 10px 14px 0;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 2px solid var(--line);
+      padding: 8px 12px;
+    }
+
+    .kpi small {
+      display: block;
+      font-family: "Press Start 2P", monospace;
+      font-size: 7px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .kpi b {
+      font-size: 28px;
+      font-weight: 400;
+      color: #fff;
+    }
+
+    .kpi span { color: var(--accent); font-size: 18px; margin-left: 6px; }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1.35fr 0.9fr;
+      gap: 10px;
+      padding: 10px 14px;
+      min-height: 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 2px solid var(--line);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel h2 {
+      font-size: 8px;
+      font-weight: 400;
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--line);
+      color: #ffe08a;
+    }
+
+    .agents {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 8px;
+      overflow: auto;
+    }
+
+    .card {
+      background: var(--panel-2);
+      border: 2px solid #2f3a4e;
+      padding: 8px 10px;
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+      font: inherit;
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .card:hover { border-color: #6a7a94; }
+    .card.sel { border-color: #fff; background: #1e2634; }
+
+    .sw {
+      width: 12px; height: 12px; margin-top: 4px;
+      box-shadow: 0 0 0 1px #000;
+    }
+
+    .card strong {
+      display: block;
+      font-family: "Press Start 2P", monospace;
+      font-size: 8px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .card em { font-style: normal; color: var(--muted); font-size: 17px; }
+    .card p { font-size: 17px; color: #cfe3ff; margin-top: 2px; }
+
+    .side { overflow: auto; }
+    .side .block { padding: 8px 12px; border-bottom: 1px solid #243044; }
+
+    .proj-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .bar {
+      height: 10px;
+      background: #0e141c;
+      border: 1px solid #2a3544;
+    }
+    .bar i {
+      display: block; height: 100%;
+      background: repeating-linear-gradient(90deg, #3d8dff 0 6px, #255fc2 6px 8px);
+    }
+
+    .rooms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px 12px 4px;
+    }
+
+    .rooms button {
+      font-family: VT323, monospace;
+      font-size: 16px;
+      background: #1a2130;
+      color: var(--ink);
+      border: 2px solid #3a465c;
+      padding: 2px 8px;
+      cursor: pointer;
+    }
+    .rooms button:hover { border-color: #fff; }
+    .rooms button.go { border-color: var(--accent); color: var(--accent); }
+
+    .log {
+      font-size: 16px;
+      color: #a9b6c8;
+      max-height: 92px;
+      overflow: auto;
+      padding: 4px 12px 10px;
+    }
+    .log div { margin-bottom: 2px; }
+    .log b { color: #ffe08a; font-weight: 400; }
+
+    .map-wrap {
+      border-top: 2px solid #cfd6de;
+      background: #0e1218;
+      display: grid;
+      grid-template-columns: 168px 1fr 220px;
+      min-height: 0;
+    }
+
+    .map-meta, .detail {
+      padding: 10px 12px;
+      font-size: 17px;
+      color: var(--muted);
+    }
+
+    .map-meta h3, .detail h3 {
+      font-family: "Press Start 2P", monospace;
+      font-size: 8px;
+      color: #ffe08a;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 176px;
+      image-rendering: pixelated;
+      cursor: pointer;
+      background: #15202b;
+    }
+
+    .detail strong {
+      color: #fff;
+      font-family: "Press Start 2P", monospace;
+      font-size: 9px;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="brand">
+        <h1 class="pixel">PIXEL AI HOUSE</h1>
+        <span class="live"><i id="livedot" class="dot off"></i><span id="livelabel">SIMULATION</span></span>
+      </div>
+      <div class="live">
+        <span id="clock">LAST UPDATED: 20:06:38Z</span>
+        <button type="button" id="btn-pause">PAUSE</button>
+        <button type="button" id="btn-json">RELOAD JSON</button>
+      </div>
+    </header>
+
+    <section class="kpis">
+      <div class="kpi"><small>AGENTS ONLINE</small><b id="kpi-agents">6</b><span>/ 6</span></div>
+      <div class="kpi"><small>ACTIVE TASKS</small><b id="kpi-tasks">6</b></div>
+      <div class="kpi"><small>AVG PROGRESS</small><b id="kpi-prog">54%</b></div>
+      <div class="kpi"><small>SELECTED</small><b id="kpi-sel">LLAMA</b></div>
+    </section>
+
+    <section class="main">
+      <article class="panel">
+        <h2 class="pixel">AI MODELS STATUS</h2>
+        <div class="agents" id="agent-cards"><button type="button" class="card" data-id="claude"><span class="sw" style="background:#6eb6ff"></span><div><strong style="color:#6eb6ff">CLAUDE-C1</strong><em>unterwegs</em><p>PIXEL UI PASS...</p></div></button><button type="button" class="card sel" data-id="llama"><span class="sw" style="background:#e24b2e"></span><div><strong style="color:#e24b2e">LLAMA-R2</strong><em>LIBRARY</em><p>RESEARCHING PIXEL PHYSICS...</p></div></button><button type="button" class="card" data-id="gpt"><span class="sw" style="background:#3dcf7a"></span><div><strong style="color:#3dcf7a">GPT-C3</strong><em>PROJECT 1</em><p>PIXEL UI PASS...</p></div></button><button type="button" class="card" data-id="mistral"><span class="sw" style="background:#f5c542"></span><div><strong style="color:#f5c542">MISTRAL-D4</strong><em>unterwegs</em><p>CODING...</p></div></button><button type="button" class="card" data-id="gemini"><span class="sw" style="background:#c45cff"></span><div><strong style="color:#c45cff">GEMINI-P5</strong><em>PROJECT 1</em><p>PIXEL UI PASS...</p></div></button><button type="button" class="card" data-id="pixel"><span class="sw" style="background:#2ec4b6"></span><div><strong style="color:#2ec4b6">PIXEL-S6</strong><em>unterwegs</em><p>BREWING COFFEE...</p></div></button></div>
+      </article>
+      <article class="panel side">
+        <h2 class="pixel">CURRENT PROJECTS</h2>
+        <div id="projects"><div class="block"><div class="proj-top"><span>0001</span><span>CLAUDE-C1  72%</span></div><div class="bar"><i style="width:72%"></i></div></div><div class="block"><div class="proj-top"><span>0002</span><span>GEMINI-P5  34%</span></div><div class="bar"><i style="width:34%"></i></div></div><div class="block"><div class="proj-top"><span>0003</span><span>MISTRAL-D4  56%</span></div><div class="bar"><i style="width:56%"></i></div></div></div>
+        <h2 class="pixel">DISPATCH</h2>
+        <p class="block" style="color:#8b97ab;font-size:16px;">Agent wählen, dann Raum klicken — NPC läuft dorthin.</p>
+        <div class="rooms" id="room-btns"><button type="button" class="go" data-room="library">LIBRARY</button><button type="button" class="go" data-room="server">SERVER ROOM</button><button type="button" class="go" data-room="hall">MAIN HALL</button><button type="button" class="go" data-room="codeLab">CODING LAB</button><button type="button" class="go" data-room="design">PROJECT 1</button><button type="button" class="go" data-room="studio">PROJECT 2</button></div>
+        <h2 class="pixel">ACTIVITY</h2>
+        <div class="log" id="log"><div><b>22:06:45</b>  PIXEL-S6 wandert nach LIBRARY</div><div><b>22:06:44</b>  GEMINI-P5 wandert nach PROJECT 1</div><div><b>22:06:43</b>  MISTRAL-D4 wandert nach SERVER ROOM</div><div><b>22:06:43</b>  CLAUDE-C1 wandert nach PROJECT 2</div><div><b>22:06:41</b>  PIXEL-S6 wandert nach MAIN HALL</div><div><b>22:06:40</b>  LLAMA-R2 wandert nach LIBRARY</div><div><b>22:06:39</b>  GEMINI-P5 wandert nach MAIN HALL</div><div><b>22:06:39</b>  GPT-C3 wandert nach PROJECT 1</div><div><b>22:06:38</b>  MISTRAL-D4 wandert nach CODING LAB</div><div><b>22:06:37</b>  CLAUDE-C1 wandert nach PROJECT 1</div><div><b>22:06:32</b>  PIXEL-S6 wandert nach PROJECT 2</div><div><b>22:06:32</b>  GEMINI-P5 wandert nach PROJECT 1</div></div>
+      </article>
+    </section>
+
+    <footer class="map-wrap">
+      <div class="map-meta">
+        <h3>HOUSE MAP</h3>
+        Mini-Übersicht. Klick auf Punkt = Agent, Klick auf Raum = Filter.
+      </div>
+      <canvas id="minimap" width="880" height="176" aria-label="House mini map"></canvas>
+      <div class="detail" id="detail"><h3>INSPECT</h3><p><strong style="color:#e24b2e">LLAMA-R2</strong></p><p>LIBRARY</p><p>RESEARCHING PIXEL PHYSICS...</p><p style="margin-top:8px;color:#8b97ab">Raum-Button oder Map klicken zum Senden.</p></div>
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * Interaktives Agent-Dashboard.
+     * Das Haus ist nur eine kleine Minimap unten (Deko + Klick-Ziele).
+     */
+
+    const canvas = document.getElementById("minimap");
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+
+    const TILE_W = 28;
+    const TILE_H = 14;
+    const ORIGIN_X = 440;
+    const ORIGIN_Y = 18;
+
+    function iso(gx, gy) {
+      return {
+        x: ORIGIN_X + (gx - gy) * (TILE_W / 2),
+        y: ORIGIN_Y + (gx + gy) * (TILE_H / 2)
+      };
+    }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+    function hash(s) {
+      let h = 0;
+      for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+      return Math.abs(h);
+    }
+
+    const ROOMS = {
+      library: { id: "library", name: "LIBRARY",     ox: 1, oy: 1, w: 4, h: 3, floor: "#8b5a2b", alt: "#7a4c24" },
+      server:  { id: "server",  name: "SERVER ROOM", ox: 6, oy: 1, w: 4, h: 3, floor: "#5a7a92", alt: "#4a6880" },
+      hall:    { id: "hall",    name: "MAIN HALL",   ox: 3, oy: 4, w: 5, h: 3, floor: "#c9a36a", alt: "#b89258" },
+      design:  { id: "design",  name: "PROJECT 1",   ox: 1, oy: 7, w: 4, h: 3, floor: "#b88850", alt: "#a67844" },
+      studio:  { id: "studio",  name: "PROJECT 2",   ox: 6, oy: 7, w: 4, h: 3, floor: "#c49a62", alt: "#b08752" },
+      codeLab: { id: "codeLab", name: "CODING LAB",  ox: 7, oy: 4, w: 3, h: 3, floor: "#6a8a5a", alt: "#5a7a4a" }
+    };
+    const ROOM_IDS = ["library", "server", "hall", "codeLab", "design", "studio"];
+
+    const ROOM_TASKS = {
+      hall: ["WRITING...", "IDLE...", "BREWING COFFEE..."],
+      library: ["RESEARCHING PIXEL PHYSICS...", "READING PAPERS..."],
+      server: ["DEPLOYING API...", "WATCHING METRICS..."],
+      design: ["MODEL OPTIMIZATION...", "PIXEL UI PASS..."],
+      studio: ["WRITING DOCUMENTATION...", "DRAWING SPRITES..."],
+      codeLab: ["CODING...", "REVIEWING PULL REQUEST..."]
+    };
+
+    function roomCenter(room) { return iso(room.ox + room.w / 2, room.oy + room.h / 2); }
+    function pickTask(id) {
+      const p = ROOM_TASKS[id] || ["WORKING..."];
+      return p[Math.floor(Math.random() * p.length)];
+    }
+
+    const DEFAULT_AGENTS = [
+      { id: "claude",  name: "CLAUDE-C1",  color: "#6eb6ff", room: "hall",    task: "WRITING..." },
+      { id: "llama",   name: "LLAMA-R2",   color: "#e24b2e", room: "library", task: "RESEARCHING PIXEL PHYSICS..." },
+      { id: "gpt",     name: "GPT-C3",     color: "#3dcf7a", room: "codeLab", task: "CODING..." },
+      { id: "mistral", name: "MISTRAL-D4", color: "#f5c542", room: "server",  task: "DEPLOYING API..." },
+      { id: "gemini",  name: "GEMINI-P5",  color: "#c45cff", room: "design",  task: "MODEL OPTIMIZATION..." },
+      { id: "pixel",   name: "PIXEL-S6",   color: "#2ec4b6", room: "studio",  task: "WRITING DOCUMENTATION..." }
+    ];
+
+    let agents = DEFAULT_AGENTS.map(seedAgent);
+    let projects = [
+      { id: "0001", agent: "CLAUDE-C1", progress: 0.72 },
+      { id: "0002", agent: "GEMINI-P5", progress: 0.34 },
+      { id: "0003", agent: "MISTRAL-D4", progress: 0.56 }
+    ];
+    let lastUpdated = new Date();
+    let jsonLive = false;
+    let paused = false;
+    let selectedId = null;
+    let hoverRoom = null;
+    let logs = [];
+
+    function seedAgent(def) {
+      const c = roomCenter(ROOMS[def.room] || ROOMS.hall);
+      const jx = (hash(def.id) % 9) - 4;
+      const jy = (hash(def.id + "y") % 7) - 3;
+      return {
+        ...def,
+        x: c.x + jx, y: c.y + jy,
+        fromX: c.x + jx, fromY: c.y + jy,
+        toX: c.x + jx, toY: c.y + jy,
+        moveT: 1, moveDuration: 1,
+        waitUntil: performance.now() + 2000 + Math.random() * 3000,
+        waypoints: [], facing: 1, locked: false
+      };
+    }
+
+    function log(msg) {
+      const t = new Date();
+      const stamp = String(t.getHours()).padStart(2, "0") + ":" + String(t.getMinutes()).padStart(2, "0") + ":" + String(t.getSeconds()).padStart(2, "0");
+      logs.unshift({ stamp, msg });
+      logs = logs.slice(0, 12);
+      renderLog();
+    }
+
+    function renderLog() {
+      document.getElementById("log").innerHTML = logs.map((l) =>
+        "<div><b>" + l.stamp + "</b>  " + l.msg + "</div>"
+      ).join("") || "<div>Keine Events.</div>";
+    }
+
+    async function pullStatus() {
+      try {
+        const res = await fetch("./status.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("fail");
+        const data = await res.json();
+        applyStatus(data);
+        jsonLive = true;
+        lastUpdated = data.updatedAt ? new Date(data.updatedAt) : new Date();
+        document.getElementById("livedot").classList.remove("off");
+        document.getElementById("livelabel").textContent = "LIVE JSON";
+      } catch (_e) {
+        jsonLive = false;
+        lastUpdated = new Date();
+        document.getElementById("livedot").classList.add("off");
+        document.getElementById("livelabel").textContent = "SIMULATION";
+      }
+      try {
+        const h = await fetch("/api/health", { cache: "no-store" });
+        if (h.ok) {
+          const info = await h.json();
+          document.getElementById("livelabel").textContent = info.ollama
+            ? ("OLLAMA " + (info.model || "")).trim()
+            : "SERVER, KEIN OLLAMA";
+          document.getElementById("livedot").classList.toggle("off", !info.ollama);
+        }
+      } catch (_health) { /* file:// oder reiner Static-Host */ }
+      renderAll();
+    }
+
+    function applyStatus(data) {
+      if (Array.isArray(data.projects)) projects = data.projects;
+      if (!Array.isArray(data.agents)) return;
+      data.agents.forEach((inc) => {
+        let a = agents.find((x) => x.id === inc.id) || agents.find((x) => x.name === inc.name);
+        if (!a) {
+          a = seedAgent({
+            id: inc.id || inc.name, name: inc.name, color: inc.color || "#fff",
+            room: inc.room || "hall", task: inc.task || pickTask(inc.room || "hall")
+          });
+          agents.push(a);
+        }
+        if (inc.color) a.color = inc.color;
+        if (inc.name) a.name = inc.name;
+        if (inc.task) { a.task = inc.task; a.locked = true; }
+        if (inc.room && ROOMS[inc.room] && inc.room !== a.room) {
+          queueTravel(a, inc.room);
+          log(a.name + " → " + ROOMS[inc.room].name);
+        }
+      });
+    }
+
+    setTimeout(pullStatus, 250);
+    setInterval(pullStatus, 8000);
+
+    function queueTravel(agent, destId) {
+      const path = [];
+      if (agent.room !== "hall" && destId !== "hall") path.push("hall");
+      path.push(destId);
+      agent.waypoints = path;
+      startLeg(agent);
+    }
+
+    function startLeg(agent) {
+      if (!agent.waypoints.length) { agent.moveT = 1; return; }
+      const nextId = agent.waypoints.shift();
+      const dest = ROOMS[nextId];
+      const c = roomCenter(dest);
+      const jx = (hash(agent.id + nextId) % 9) - 4;
+      const jy = (hash(agent.id + nextId + "y") % 7) - 3;
+      agent.fromX = agent.x; agent.fromY = agent.y;
+      agent.toX = c.x + jx; agent.toY = c.y + jy;
+      agent.moveT = 0;
+      agent.moveDuration = clamp(Math.hypot(agent.toX - agent.fromX, agent.toY - agent.fromY) / 48, 1.1, 2.8);
+      agent.facing = agent.toX >= agent.fromX ? 1 : -1;
+      agent.room = nextId;
+    }
+
+    async function dispatch(roomId) {
+      const a = agents.find((x) => x.id === selectedId);
+      if (!a || !ROOMS[roomId]) return;
+      a.locked = true;
+      queueTravel(a, roomId);
+      log("DISPATCH " + a.name + " → " + ROOMS[roomId].name);
+      renderAll();
+      // Echtes Modell: Backend schreibt status.json (Ollama, ein Job nach dem anderen).
+      try {
+        const res = await fetch("/api/job", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ agentId: a.id, room: roomId })
+        });
+        if (res.status === 429) log("Laptop beschäftigt — warte auf laufenden Job");
+        else if (!res.ok) log("Backend: " + res.status + " (ohne Server nur Simulation)");
+      } catch (_err) {
+        log("Kein house_server.py — nur lokale Simulation");
+      }
+    }
+
+    function updateAgents(dt, now) {
+      if (paused) return;
+      agents.forEach((a) => {
+        if (a.moveT < 1) {
+          a.moveT = clamp(a.moveT + dt / a.moveDuration, 0, 1);
+          const t = ease(a.moveT);
+          a.x = lerp(a.fromX, a.toX, t);
+          a.y = lerp(a.fromY, a.toY, t);
+          if (a.moveT >= 1) {
+            if (a.waypoints.length) startLeg(a);
+            else {
+              a.waitUntil = now + 2800 + Math.random() * 4000;
+              if (!a.locked) a.task = pickTask(a.room);
+              renderAll();
+            }
+          }
+          return;
+        }
+        if (!jsonLive && now >= a.waitUntil) {
+          const ids = ROOM_IDS.filter((id) => id !== a.room);
+          const dest = ids[Math.floor(Math.random() * ids.length)];
+          queueTravel(a, dest);
+          log(a.name + " wandert nach " + ROOMS[dest].name);
+        }
+      });
+    }
+
+    function diamond(x, y, color) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + TILE_W / 2, y + TILE_H / 2);
+      ctx.lineTo(x, y + TILE_H);
+      ctx.lineTo(x - TILE_W / 2, y + TILE_H / 2);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    function drawMinimap() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#1a2a22";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Rasen
+      for (let gy = 0; gy < 12; gy++) {
+        for (let gx = 0; gx < 12; gx++) {
+          const p = iso(gx, gy);
+          diamond(p.x, p.y, ((gx + gy) & 1) ? "#3d6a32" : "#355c2c");
+        }
+      }
+
+      ROOM_IDS.forEach((id) => {
+        const r = ROOMS[id];
+        const hl = hoverRoom === id || (selectedId && agents.find((a) => a.id === selectedId)?.room === id);
+        for (let gy = r.oy; gy < r.oy + r.h; gy++) {
+          for (let gx = r.ox; gx < r.ox + r.w; gx++) {
+            const p = iso(gx, gy);
+            diamond(p.x, p.y, ((gx + gy) & 1) ? r.alt : r.floor);
+          }
+        }
+        const c = roomCenter(r);
+        ctx.font = '7px "Press Start 2P", monospace';
+        ctx.textAlign = "center";
+        ctx.fillStyle = hl ? "#ffffff" : "rgba(255,255,255,0.8)";
+        ctx.fillText(r.name, c.x, c.y - 10);
+        if (hl) {
+          ctx.strokeStyle = "#fff";
+          ctx.strokeRect(c.x - 36, c.y - 16, 72, 14);
+        }
+      });
+
+      [...agents].sort((a, b) => a.y - b.y).forEach((a) => {
+        ctx.fillStyle = "rgba(0,0,0,0.35)";
+        ctx.beginPath();
+        ctx.ellipse(a.x, a.y + 4, 6, 3, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = a.color;
+        ctx.fillRect(Math.round(a.x) - 4, Math.round(a.y) - 10, 8, 10);
+        ctx.fillStyle = "#1a1c22";
+        ctx.fillRect(Math.round(a.x) - 2, Math.round(a.y) - 7, 2, 2);
+        ctx.fillRect(Math.round(a.x) + 1, Math.round(a.y) - 7, 2, 2);
+        if (a.id === selectedId) {
+          ctx.strokeStyle = "#fff";
+          ctx.strokeRect(Math.round(a.x) - 6, Math.round(a.y) - 12, 12, 14);
+        }
+      });
+    }
+
+    function roomAt(mx, my) {
+      // grober Hit-Test über Raumzentren
+      let best = null, bestD = 38;
+      ROOM_IDS.forEach((id) => {
+        const c = roomCenter(ROOMS[id]);
+        const d = Math.hypot(mx - c.x, my - c.y);
+        if (d < bestD) { bestD = d; best = id; }
+      });
+      return best;
+    }
+
+    function agentAt(mx, my) {
+      return [...agents].reverse().find((a) => Math.hypot(mx - a.x, my - (a.y - 4)) < 12);
+    }
+
+    canvas.addEventListener("mousemove", (ev) => {
+      const r = canvas.getBoundingClientRect();
+      const mx = (ev.clientX - r.left) * (canvas.width / r.width);
+      const my = (ev.clientY - r.top) * (canvas.height / r.height);
+      hoverRoom = roomAt(mx, my);
+    });
+
+    canvas.addEventListener("click", (ev) => {
+      const r = canvas.getBoundingClientRect();
+      const mx = (ev.clientX - r.left) * (canvas.width / r.width);
+      const my = (ev.clientY - r.top) * (canvas.height / r.height);
+      const ag = agentAt(mx, my);
+      if (ag) {
+        selectedId = selectedId === ag.id ? null : ag.id;
+        renderAll();
+        return;
+      }
+      const room = roomAt(mx, my);
+      if (room && selectedId) dispatch(room);
+      else if (room) {
+        const first = agents.find((a) => a.room === room);
+        if (first) selectedId = first.id;
+        renderAll();
+      }
+    });
+
+    function selectAgent(id) {
+      selectedId = selectedId === id ? null : id;
+      renderAll();
+    }
+
+    function renderAll() {
+      const sel = agents.find((a) => a.id === selectedId);
+
+      document.getElementById("kpi-agents").textContent = String(agents.length);
+      document.getElementById("kpi-tasks").textContent = String(agents.filter((a) => a.moveT < 1 || !/IDLE/.test(a.task)).length);
+      const avg = projects.reduce((s, p) => s + (p.progress || 0), 0) / Math.max(projects.length, 1);
+      document.getElementById("kpi-prog").textContent = Math.round(avg * 100) + "%";
+      document.getElementById("kpi-sel").textContent = sel ? sel.name.replace(/-.*$/, "") : "NONE";
+
+      const hh = String(lastUpdated.getUTCHours()).padStart(2, "0");
+      const mm = String(lastUpdated.getUTCMinutes()).padStart(2, "0");
+      const ss = String(lastUpdated.getUTCSeconds()).padStart(2, "0");
+      document.getElementById("clock").textContent = "LAST UPDATED: " + hh + ":" + mm + ":" + ss + "Z";
+
+      document.getElementById("agent-cards").innerHTML = agents.map((a) => {
+        const moving = a.moveT < 1 ? "unterwegs" : ROOMS[a.room].name;
+        return '<button type="button" class="card' + (a.id === selectedId ? " sel" : "") + '" data-id="' + a.id + '">' +
+          '<span class="sw" style="background:' + a.color + '"></span>' +
+          "<div><strong style='color:" + a.color + "'>" + a.name + "</strong>" +
+          "<em>" + moving + "</em><p>" + a.task + "</p></div></button>";
+      }).join("");
+
+      document.getElementById("projects").innerHTML = projects.map((p) => {
+        const pct = Math.round(clamp(p.progress || 0, 0, 1) * 100);
+        return '<div class="block"><div class="proj-top"><span>' + p.id + "</span><span>" +
+          (p.agent || "") + "  " + pct + "%</span></div><div class=\"bar\"><i style=\"width:" + pct + '%"></i></div></div>';
+      }).join("");
+
+      document.getElementById("room-btns").innerHTML = ROOM_IDS.map((id) =>
+        '<button type="button" class="' + (selectedId ? "go" : "") + '" data-room="' + id + '">' + ROOMS[id].name + "</button>"
+      ).join("");
+
+      const box = document.getElementById("detail");
+      if (sel) {
+        box.innerHTML = "<h3>INSPECT</h3><p><strong style='color:" + sel.color + "'>" + sel.name +
+          "</strong></p><p>" + ROOMS[sel.room].name + "</p><p>" + sel.task + "</p>" +
+          "<p style='margin-top:8px;color:#8b97ab'>Raum-Button oder Map klicken zum Senden.</p>";
+      } else {
+        box.innerHTML = "<h3>INSPECT</h3><p>Klicke eine Karte oder die Map.</p>";
+      }
+    }
+
+    document.getElementById("agent-cards").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-id]");
+      if (btn) selectAgent(btn.dataset.id);
+    });
+    document.getElementById("room-btns").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-room]");
+      if (btn) dispatch(btn.dataset.room);
+    });
+    document.getElementById("btn-pause").addEventListener("click", () => {
+      paused = !paused;
+      document.getElementById("btn-pause").textContent = paused ? "RESUME" : "PAUSE";
+      document.getElementById("btn-pause").classList.toggle("active", paused);
+      log(paused ? "Simulation pausiert" : "Simulation weiter");
+    });
+    document.getElementById("btn-json").addEventListener("click", pullStatus);
+
+    log("Dashboard bereit — Agent klicken, dann Raum zuweisen.");
+    renderAll();
+
+    let last = performance.now();
+    function frame(ts) {
+      const dt = clamp((ts - last) / 1000, 0, 0.05);
+      last = ts;
+      updateAgents(dt, ts);
+      drawMinimap();
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  </script>
+
+
+</body></html>
